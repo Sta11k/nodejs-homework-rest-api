@@ -1,5 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+  updateContact,
+} = require("./routes/contacts.js");
 
 router.get("/", async (req, res, next) => {
   res.json({ message: "Home work done fifsh" });
