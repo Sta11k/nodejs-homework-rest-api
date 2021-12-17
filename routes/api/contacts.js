@@ -1,5 +1,5 @@
 import { Router } from "express";
-import model from "../../model/index";
+import model from "../../model/index.js";
 const router = new Router();
 
 router.get("/", async (req, res, next) => {
@@ -7,12 +7,13 @@ router.get("/", async (req, res, next) => {
   res.status(200).json(contacts);
 });
 
-router.get("/:Id", async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   const contact = await model.getContactById(id);
-  console.log(contact);
+  console.log("contact", contact);
+  console.log("id", id);
   if (contact) {
-    return res.status(200).json({ contact });
+    return res.status(200).json(contact);
   }
 
   res.status(404).json({ message: "Not found" });
@@ -22,11 +23,11 @@ router.post("/", async (req, res, next) => {
   res.json({ message: "template message" });
 });
 
-router.delete("/:contactId", async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   res.json({ message: "template message" });
 });
 
-router.patch("/:contactId", async (req, res, next) => {
+router.patch("/:id", async (req, res, next) => {
   res.json({ message: "template message" });
 });
 
