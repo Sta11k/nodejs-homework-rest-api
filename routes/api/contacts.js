@@ -1,19 +1,21 @@
-const express = require("express");
-const router = express.Router();
-const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
-} = require("./routes/contacts.js");
+import { Router } from "express";
+import model from "../../model/index";
+const router = new Router();
 
 router.get("/", async (req, res, next) => {
-  res.json({ message: "Home work done fifsh" });
+  const contacts = await model.listContacts();
+  res.status(200).json(contacts);
 });
 
-router.get("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
+router.get("/:Id", async (req, res, next) => {
+  const { id } = req.params;
+  const contact = await model.getContactById(id);
+  console.log(contact);
+  if (contact) {
+    return res.status(200).json({ contact });
+  }
+
+  res.status(404).json({ message: "Not found" });
 });
 
 router.post("/", async (req, res, next) => {
@@ -28,4 +30,4 @@ router.patch("/:contactId", async (req, res, next) => {
   res.json({ message: "template message" });
 });
 
-module.exports = router;
+export default router;
