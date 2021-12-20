@@ -30,10 +30,6 @@ router.delete("/:id", async (req, res, next) => {
   console.log("contact", contact);
   console.log("id", id);
   if (contact) {
-    console.log(
-      "🚀 ~ file: contacts.js ~ line 33 ~ router.delete ~ contact",
-      contact
-    );
     return res.status(200).json({ message: "contact deleted" });
   }
 

@@ -17,9 +17,9 @@ const getContactById = async (contactId) => {
 const removeContact = async (contactId) => {
   // const contacts = await listContacts();
 
-  const findeContact = contacts.some((el) => el.id === contactId);
+  const findeContact = contacts.findIndex((el) => el.id === contactId);
   // const filterContact = contacts.filter((el) => el.id !== contactId);
-  if (findeContact !== 1) {
+  if (findeContact !== -1) {
     const [result] = contacts.splice(findeContact, 1);
     await fs.writeFile(
       path.join(__dirname, "contacts.json"),
