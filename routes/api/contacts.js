@@ -20,11 +20,24 @@ router.get("/:id", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
-  res.json({ message: "template message" });
+  const addContact = await model.addContact(req.body);
+  res.status(201).json(addContact);
 });
 
 router.delete("/:id", async (req, res, next) => {
-  res.json({ message: "template message" });
+  const { id } = req.params;
+  const contact = await model.removeContact(id);
+  console.log("contact", contact);
+  console.log("id", id);
+  if (contact) {
+    console.log(
+      "🚀 ~ file: contacts.js ~ line 33 ~ router.delete ~ contact",
+      contact
+    );
+    return res.status(200).json({ message: "contact deleted" });
+  }
+
+  res.status(404).json({ message: "Not found" });
 });
 
 router.patch("/:id", async (req, res, next) => {

@@ -33,18 +33,18 @@ const removeContact = async (contactId) => {
 
 // const addContact = async (body) => {};
 
-const addContact = async (name, email, phone) => {
+const addContact = async ({ name, email, phone }) => {
   if (!name || !email || !phone) {
     return;
   }
 
-  const addContacts = { name, email, phone, id: randomUUID() };
-  contacts.push(addContacts);
+  const addNewContact = { name, email, phone, id: randomUUID() };
+  contacts.push(addNewContact);
   await fs.writeFile(
     path.join(__dirname, "contacts.json"),
     JSON.stringify(contacts, null, 2)
   );
-  return addContact;
+  return addNewContact;
 };
 
 const updateContact = async (contactId, body) => {
