@@ -48,11 +48,12 @@ const addContact = async ({ name, email, phone }) => {
 };
 
 const updateContact = async (contactId, body) => {
-  const findeContact = contacts.some((el) => el.id === contactId);
 
-  if (findeContact !== 1) {
-    const updateItemContact = { id: contactId, ...body };
-    contacts[findeContact] = updateItemContact;
+  const searchIndex = contacts.findIndex((el) => el.id === contactId);
+
+  if (searchIndex !== 1) {
+    const updateItemContact = { id: contactId,...contacts[searchIndex] , ...body };
+    contacts[searchIndex] = updateItemContact;
     await fs.writeFile(
       path.join(__dirname, "contacts.json"),
       JSON.stringify(contacts, null, 2)
