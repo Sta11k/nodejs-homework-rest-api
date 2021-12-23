@@ -31,7 +31,7 @@ export const validateUpdate = async (req, res, next) => {
     if (type === "object.unknown") {
       return res.status(400).json({ message: err.message });
     }
-    return res.status(400).json({ message: "missing fields" });
+    return res.status(400).json({ message: err.message });
   }
   next();
 };
