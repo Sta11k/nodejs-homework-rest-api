@@ -24,6 +24,7 @@ const updateFavoriteSchema = Joi.object({
   favorite: Joi.bool().required(),
 });
 const regularLimit = "\\d+";
+const regularNameEmailAge = "(name|email|age)\\|?(name|email|age)+";
 const querySchema = Joi.object({
   // eslint-disable-next-line prefer-regex-literals
   limit: Joi.string().pattern(new RegExp(regularLimit)).optional(),
@@ -31,9 +32,7 @@ const querySchema = Joi.object({
   sortBy: Joi.string().valid("name", "age", "email", "phone", "favorite"),
   sortByDesc: Joi.string().valid("name", "age", "email", "phone", "favorite"),
   // eslint-disable-next-line prefer-regex-literals
-  filter: Joi.string()
-    .pattern(new RegExp("(name|email|age)\\|?(name|email|age)+"))
-    .optional(),
+  filter: Joi.string().pattern(new RegExp(regularNameEmailAge)).optional(),
 });
 
 export const validateCreation = async (req, res, next) => {
