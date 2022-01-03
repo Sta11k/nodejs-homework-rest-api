@@ -1,10 +1,11 @@
 import express from "express";
 import logger from "morgan";
 import cors from "cors";
-
-import contactsRouter from "./routes/contacts/index";
 import { HttpCode } from "./lib/constants";
 import { HttpMessage } from "./lib/message";
+import contactsRouter from "./routes/contacts/index";
+import authRouter from "./routes/auth/index";
+
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.use("/api/contacts", contactsRouter);
+app.use("/api/auth", authRouter);
 
 app.use((req, res) => {
    res
