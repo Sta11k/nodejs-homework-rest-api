@@ -1,19 +1,35 @@
 import { Router } from "express";
-import { addNewContact, getContactById, getContacts, removeContactId, updateContact } from "../../controllers/contacts";
-import { validateCreation, validateUpdate, validateId, validateUpdateFavorite, validateQuery } from "./validation";
-
+import {
+  addNewContact,
+  getContactById,
+  getContacts,
+  removeContactId,
+  updateContact,
+} from "../../controllers/contacts";
+import {
+  validateCreation,
+  validateUpdate,
+  validateId,
+  validateUpdateFavorite,
+  validateQuery,
+} from "./validation";
+import guard from "../../middlewares/guard";
 const router = new Router();
 
-router.get("/", validateQuery ,getContacts);
+router.get("/", [guard, validateQuery], getContacts);
 
-router.get("/:id", validateId, getContactById);
+router.get("/:id", [guard, validateId], getContactById);
 
-router.post("/", validateCreation, addNewContact);
+router.post("/", [guard, validateCreation], addNewContact);
 
-router.delete("/:id", validateId, removeContactId);
+router.delete("/:id", [guard, validateId], removeContactId);
 
-router.put("/:id", validateId, validateUpdate,updateContact );
+router.put("/:id", [guard, validateId, validateUpdate], updateContact);
 
-router.patch('/:id/favorite', validateId, validateUpdateFavorite,updateContact );
+router.patch(
+  "/:id/favorite",
+  [guard, validateId, validateUpdateFavorite],
+  updateContact
+);
 
 export default router;

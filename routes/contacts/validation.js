@@ -77,7 +77,7 @@ export const validateUpdateFavorite = async (req, res, next) => {
 };
 
 export const validateId = async (req, res, next) => {
-  if (!Types.ObjectId.isValid(req.params.is)) {
+  if (!Types.ObjectId.isValid(req.params.id)) {
     return res
       .status(HttpCode.BAD_REQUEST)
       .json({ message: HttpMessage.INVALID_OBJECTID });

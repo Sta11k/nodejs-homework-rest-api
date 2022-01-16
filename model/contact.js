@@ -1,44 +1,56 @@
-import mongoose from 'mongoose';
-import { MAX_AGE, MIN_AGE } from '../lib/constants'
-const { Schema, model } = mongoose;
+import mongoose from "mongoose";
+import { MAX_AGE, MIN_AGE } from "../lib/constants";
+const { Schema, SchemaTypes, model } = mongoose;
 
- 
-
-const contactSchema = new Schema({
+const contactSchema = new Schema(
+  {
     name: {
-        type: String,
-        required: [true, 'Set name for contact'],
+      type: String,
+      required: [true, "Set name for contact"],
     },
     age: {
-        type: Number,
-        min: MIN_AGE,
-        max: MAX_AGE,
-        default: null,
+      type: Number,
+      min: MIN_AGE,
+      max: MAX_AGE,
+      default: null,
     },
     email: {
-        type: String,
+      type: String,
     },
     phone: {
-        type: String,
+      type: String,
     },
     favorite: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
-}, {
-    versionKey: false, timestamps: true, toJSON: {
-        virtuals: true, transform: function (doc, ret) { 
-            delete ret._id
-            return ret
-}}, toObject: {virtuals:true}})
+    owner: {
+      type: SchemaTypes.ObjectId,
+      ref: "user",
+      required: true,
+    },
+  },
+  {
+    versionKey: false,
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret) {
+        delete ret._id;
+        return ret;
+      },
+    },
+    toObject: { virtuals: true },
+  }
+);
 
-contactSchema.virtual('status').get(function () { 
-    if (this.age >= 40) { 
-        return 'old'
-    }
-    return 'young'
-})
+contactSchema.virtual("status").get(function () {
+  if (this.age >= 40) {
+    return "old";
+  }
+  return "young";
+});
 
-const Contact = model('contact', contactSchema)
+const Contact = model("contact", contactSchema);
 
-export  default Contact
+export default Contact;
