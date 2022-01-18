@@ -3,8 +3,8 @@ import { HttpMessage } from "../../lib/message";
 import repositoryContacts from "../../repository/contacts";
 import {
   UploadFileService,
-  LocalFileService,
-  // CloudlFileService,
+  // LocalFileService,
+  CloudlFileService,
 } from "../../service/file-storage";
 
 const aggregation = async (req, res, next) => {
@@ -30,10 +30,12 @@ const aggregation = async (req, res, next) => {
 
 const uploadAvatar = async (req, res, next) => {
   const uploadService = new UploadFileService(
-    LocalFileService,
+    // LocalFileService,
+    CloudlFileService,
     req.file,
     req.user
   );
+
   const avatarUrl = await uploadService.updateAvatar();
   res.status(HttpCode.OK).json({
     status: HttpMessage.SUCCESS,
