@@ -1,6 +1,11 @@
 import { HttpCode } from "../../lib/constants";
 import { HttpMessage } from "../../lib/message";
 import repositoryContacts from "../../repository/contacts";
+import {
+  UploadFileService,
+  // LocalFileService,
+  CloudlFileService,
+} from "../../service/file-storage";
 
 const aggregation = async (req, res, next) => {
   const { id } = req.params;
@@ -23,4 +28,20 @@ const aggregation = async (req, res, next) => {
   });
 };
 
-export { aggregation };
+const uploadAvatar = async (req, res, next) => {
+  const uploadService = new UploadFileService(
+    // LocalFileService,
+    CloudlFileService,
+    req.file,
+    req.user
+  );
+
+  const avatarUrl = await uploadService.updateAvatar();
+  res.status(HttpCode.OK).json({
+    status: HttpMessage.SUCCESS,
+    code: HttpCode.OK,
+    data: { avatarUrl },
+  });
+};
+
+export { aggregation, uploadAvatar };
