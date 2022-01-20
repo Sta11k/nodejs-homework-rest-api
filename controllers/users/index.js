@@ -1,9 +1,10 @@
 import { HttpCode } from "../../lib/constants";
 import { HttpMessage } from "../../lib/message";
 import repositoryContacts from "../../repository/contacts";
+import repositoryUsers from "../../repository/users";
 import {
   UploadFileService,
-  // LocalFileService,
+  LocalFileService,
   CloudlFileService,
 } from "../../service/file-storage";
 
@@ -44,4 +45,38 @@ const uploadAvatar = async (req, res, next) => {
   });
 };
 
-export { aggregation, uploadAvatar };
+const verifyUser = async (req, res, next) => {
+  const verifyToken = req.params.token;
+  const userFromToken = repositoryUsers.findByVerifyToken(verifyToken);
+
+  if (userFromToken) {
+    await repositoryUsers.updateVerify(userFromToken.id, true);
+    res.status(HttpCode.OK).json({
+      status: HttpMessage.SUCCESS,
+      code: HttpCode.OK,
+      data: { message: HttpMessage.SUCCESS },
+    });
+  }
+  res.status(HttpCode.BAD_REQUEST).json({
+    status: HttpMessage.INVALID_TOKEN,
+    code: HttpCode.BAD_REQUEST,
+    data: { message: HttpMessage.INVALID_TOKEN },
+  });
+
+  // const repeatEmailForVerifyUser = async (req, res, next) => {
+  //   const uploadService = new UploadFileService(
+  //     LocalFileService,
+  //     req.file,
+  //     req.user
+  //   );
+
+  //   const avatarUrl = await uploadService.updateAvatar();
+  //   res.status(HttpCode.OK).json({
+  //     status: HttpMessage.SUCCESS,
+  //     code: HttpCode.OK,
+  //     data: { avatarUrl },
+  //   });
+  // };
+};
+
+export { aggregation, uploadAvatar, verifyUser };
