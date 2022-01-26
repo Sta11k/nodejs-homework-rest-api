@@ -1,6 +1,7 @@
 import { HttpCode } from "../../lib/constants";
 import { HttpMessage } from "../../lib/message";
 import authService from "../../service/auth/index.js";
+import { CustomError } from "../../lib/custom-error";
 import {
   EmailService,
   SenderNodemailer,
@@ -13,11 +14,7 @@ const registration = async (req, res, next) => {
 
     const isUserExist = await authService.isUserExist(email);
     if (isUserExist) {
-      return res.status(HttpCode.CONFLICT).json({
-        status: HttpMessage.ERROR,
-        code: HttpCode.CONFLICT,
-        message: HttpMessage.EMAIL_ALREADY_EXIST,
-      });
+      throw new CustomError(HttpCode.CONFLICT, HttpMessage.EMAIL_ALREADY_EXIST);
     }
     const userData = await authService.create(req.body);
     const emailService = new EmailService(

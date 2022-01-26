@@ -7,6 +7,11 @@ import {
   LocalFileService,
   CloudlFileService,
 } from "../../service/file-storage";
+import {
+  EmailService,
+  SenderNodemailer,
+  SenderSendgrid,
+} from "../../service/email";
 
 const aggregation = async (req, res, next) => {
   const { id } = req.params;
@@ -47,11 +52,12 @@ const uploadAvatar = async (req, res, next) => {
 
 const verifyUser = async (req, res, next) => {
   const verifyToken = req.params.token;
-  const userFromToken = repositoryUsers.findByVerifyToken(verifyToken);
+  const userFromToken = await repositoryUsers.findByVerifyToken(verifyToken);
 
   if (userFromToken) {
     await repositoryUsers.updateVerify(userFromToken.id, true);
-    res.status(HttpCode.OK).json({
+
+    return res.status(HttpCode.OK).json({
       status: HttpMessage.SUCCESS,
       code: HttpCode.OK,
       data: { message: HttpMessage.SUCCESS },
@@ -62,21 +68,41 @@ const verifyUser = async (req, res, next) => {
     code: HttpCode.BAD_REQUEST,
     data: { message: HttpMessage.INVALID_TOKEN },
   });
-
-  // const repeatEmailForVerifyUser = async (req, res, next) => {
-  //   const uploadService = new UploadFileService(
-  //     LocalFileService,
-  //     req.file,
-  //     req.user
-  //   );
-
-  //   const avatarUrl = await uploadService.updateAvatar();
-  //   res.status(HttpCode.OK).json({
-  //     status: HttpMessage.SUCCESS,
-  //     code: HttpCode.OK,
-  //     data: { avatarUrl },
-  //   });
-  // };
 };
 
-export { aggregation, uploadAvatar, verifyUser };
+const repeatEmailForVerifyUser = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await repositoryUsers.findByEmail(email);
+  if (user) {
+    const { email, name, verifyTokenEmail } = user;
+
+    const emailService = new EmailService(
+      process.env.NODE_ENV,
+      new SenderNodemailer()
+    );
+    const isSend = await emailService.sendVerifyEmail(
+      email,
+      name,
+      verifyTokenEmail
+    );
+
+    if (isSend) {
+      return res.status(HttpCode.OK).json({
+        status: HttpMessage.SUCCESS,
+        code: HttpCode.SUCCESS,
+        data: { message: HttpMessage.SUCCESS },
+      });
+    }
+    return res.status(HttpCode.SERVICE_UNAVAILABLE).json({
+      status: HttpMessage.ERROR,
+      code: HttpCode.SERVICE_UNAVAILABLE,
+      data: { message: HttpMessage.SERVICE_UNAVAILABLE },
+    });
+  }
+  res.status(HttpCode.NOT_FOUND).json({
+    status: HttpMessage.NOT_FOUND,
+    code: HttpCode.NOT_FOUND,
+    data: { message: HttpMessage.NOT_FOUND },
+  });
+};
+export { aggregation, uploadAvatar, verifyUser, repeatEmailForVerifyUser };

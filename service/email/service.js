@@ -5,7 +5,8 @@ class EmailService {
 
     switch (env) {
       case "development":
-        this.link = "http://localhost:3000/";
+        this.link = "https://acee-95-134-189-8.ngrok.io";
+        // this.link = "http://localhost:3000/";
         break;
 
       case "test":
@@ -38,7 +39,7 @@ class EmailService {
           button: {
             color: "#22BC66", // Optional action button color
             text: "Confirm your account",
-            link: `${this.link}/api/users/veryfy/${verifyToken}`,
+            link: `${this.link}/api/users/verify/${verifyToken}`,
           },
         },
         outro: "Якщо потрібна допомога, напишіть нам.",
