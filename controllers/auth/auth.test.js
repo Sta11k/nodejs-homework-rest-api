@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
 import { registration } from "./index";
 import { HttpCode } from "../../lib/constants";
-// import { HttpMessage } from "../../lib/message";
+import { HttpMessage } from "../../lib/message";
 import authService from "../../service/auth";
 
 describe("Unit test registration", () => {
