@@ -1,5 +1,6 @@
 import { HttpCode } from "../../lib/constants";
 import { HttpMessage } from "../../lib/message";
+import { CustomError } from "../../lib/custom-error";
 import repositoryContacts from "../../repository/contacts";
 
 const getContacts = async (req, res, next) => {
@@ -24,12 +25,7 @@ const getContactById = async (req, res, next) => {
       data: { contact },
     });
   }
-
-  res.status(HttpCode.NOT_FOUND).json({
-    status: HttpMessage.ERROR,
-    code: HttpCode.NOT_FOUND,
-    message: HttpMessage.NOT_FOUND,
-  });
+  throw new CustomError(HttpCode.NOT_FOUND, HttpMessage.NOT_FOUND);
 };
 
 const addNewContact = async (req, res, next) => {
@@ -56,11 +52,7 @@ const removeContactId = async (req, res, next) => {
     });
   }
 
-  res.status(HttpCode.NOT_FOUND).json({
-    status: HttpMessage.ERROR,
-    code: HttpCode.NOT_FOUND,
-    message: HttpMessage.NOT_FOUND,
-  });
+  throw new CustomError(HttpCode.NOT_FOUND, HttpMessage.NOT_FOUND);
 };
 
 const updateContact = async (req, res, next) => {
@@ -78,11 +70,7 @@ const updateContact = async (req, res, next) => {
     });
   }
 
-  res.status(HttpCode.NOT_FOUND).json({
-    status: HttpMessage.ERROR,
-    code: HttpCode.NOT_FOUND,
-    message: HttpMessage.NOT_FOUND,
-  });
+  throw new CustomError(HttpCode.NOT_FOUND, HttpMessage.NOT_FOUND);
 };
 
 export {
